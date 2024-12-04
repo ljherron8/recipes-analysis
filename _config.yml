@@ -1,0 +1,8 @@
+theme: minima
+title: "Your Creative Title"
+author: "Liam Herron and Daniel Leifer"
+description: "A brief description of your project."
+
+plugins:
+  - jekyll-sass-converter
+

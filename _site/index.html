@@ -3,26 +3,26 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Analyzing Recipes | Your Creative Title</title>
+<title>A Data-Driven Look at Recipe Ratings | The Ingredients for a Great Recipe</title>
 <meta name="generator" content="Jekyll v4.3.4" />
-<meta property="og:title" content="Analyzing Recipes" />
-<meta name="author" content="Liam Herron and Daniel Leifer" />
+<meta property="og:title" content="A Data-Driven Look at Recipe Ratings" />
+<meta name="author" content="Daniel Leifer and Liam Herron" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="A brief description of your project." />
-<meta property="og:description" content="A brief description of your project." />
+<meta name="description" content="This project explores the factors that contribute to highly rated recipes by analyzing a dataset of recipe features and user ratings. Using data-driven techniques, we identify the “ingredients” for a great recipe, uncovering patterns and relationships between recipe attributes and their success. From data cleaning and visualization to building predictive models, this website provides insights into how data science can help us understand what makes recipes stand out. Perfect for food enthusiasts and data lovers alike, this analysis serves up a unique blend of culinary and computational perspectives." />
+<meta property="og:description" content="This project explores the factors that contribute to highly rated recipes by analyzing a dataset of recipe features and user ratings. Using data-driven techniques, we identify the “ingredients” for a great recipe, uncovering patterns and relationships between recipe attributes and their success. From data cleaning and visualization to building predictive models, this website provides insights into how data science can help us understand what makes recipes stand out. Perfect for food enthusiasts and data lovers alike, this analysis serves up a unique blend of culinary and computational perspectives." />
 <link rel="canonical" href="http://localhost:4000/" />
 <meta property="og:url" content="http://localhost:4000/" />
-<meta property="og:site_name" content="Your Creative Title" />
+<meta property="og:site_name" content="The Ingredients for a Great Recipe" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Analyzing Recipes" />
+<meta property="twitter:title" content="A Data-Driven Look at Recipe Ratings" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Liam Herron and Daniel Leifer"},"description":"A brief description of your project.","headline":"Analyzing Recipes","name":"Your Creative Title","url":"http://localhost:4000/"}</script>
+{"@context":"https://schema.org","@type":"WebSite","author":{"@type":"Person","name":"Daniel Leifer and Liam Herron"},"description":"This project explores the factors that contribute to highly rated recipes by analyzing a dataset of recipe features and user ratings. Using data-driven techniques, we identify the “ingredients” for a great recipe, uncovering patterns and relationships between recipe attributes and their success. From data cleaning and visualization to building predictive models, this website provides insights into how data science can help us understand what makes recipes stand out. Perfect for food enthusiasts and data lovers alike, this analysis serves up a unique blend of culinary and computational perspectives.","headline":"A Data-Driven Look at Recipe Ratings","name":"The Ingredients for a Great Recipe","url":"http://localhost:4000/"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Your Creative Title" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="The Ingredients for a Great Recipe" /></head>
 <body><header class="site-header" role="banner">
 
-  <div class="wrapper"><a class="site-title" rel="author" href="/">Your Creative Title</a><nav class="site-nav">
+  <div class="wrapper"><a class="site-title" rel="author" href="/">The Ingredients for a Great Recipe</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
         <label for="nav-trigger">
           <span class="menu-icon">
@@ -32,72 +32,458 @@
           </span>
         </label>
 
-        <div class="trigger"><a class="page-link" href="/">Analyzing Recipes</a></div>
+        <div class="trigger"><a class="page-link" href="/"> A Data-Driven Look at Recipe Ratings</a></div>
       </nav></div>
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
         <h1 id="introduction">Introduction</h1>
 
-<p><em>Intro goes here</em></p>
+<p>Cooking enthusiasts and food lovers often search for the perfect recipe—one that not only tastes great but also has the ratings to back it up. This project uses a dataset of recipes and user interactions from <a href="https://www.food.com">Food.com</a> to investigate how recipe attributes correlate with user satisfaction, as measured by average ratings.</p>
+
+<p><strong>Central Question:</strong><br />
+<em>How can we predict a recipe’s rating based solely on the information available about the recipe itself?</em></p>
+
+<p>This question matters because understanding which factors influence user ratings can guide home cooks, professional chefs, recipe creators, and platforms like Food.com in developing better, more appealing recipes. For instance, if we find that recipes with more detailed instructions or fewer steps tend to be rated higher, this insight could help recipe authors improve clarity and simplicity in their creations. Similarly, learning about the relationship between nutritional factors, preparation time, or the number of ingredients and rating can help users select recipes that align with their preferences and dietary needs.</p>
+
+<p><strong>Data Overview:</strong><br />
+We used two datasets from Food.com in our analysis:</p>
+<ol>
+  <li><strong>Recipes Dataset:</strong> Contains details of <strong>83,782</strong> recipes.</li>
+  <li><strong>Interactions (Ratings) Dataset:</strong> Contains details of 731927 user-submitted ratings and reviews of these recipes.</li>
+</ol>
+
+<p><strong>Relevant Columns &amp; Their Descriptions:</strong></p>
+
+<p>From the Recipes Dataset:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">name</code></strong>: The recipe’s title, providing context and identification.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">id</code></strong>: A unique identifier for each recipe.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">minutes</code></strong>: The preparation time, giving a sense of complexity or quickness.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">n_steps</code></strong>: The number of steps in the recipe instructions, indicating complexity and detail.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">ingredients</code></strong> and <strong><code class="language-plaintext highlighter-rouge">n_ingredients</code></strong>: The full ingredient list and its count, reflecting complexity, flavor profiles, and resource requirements.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">nutrition</code></strong>: A list with nutritional data (calories, fat, sugar, sodium, protein, etc.).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">description</code></strong>: A user-provided description, possibly adding qualitative insight.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">tags</code></strong>: Categorical indicators (e.g., cuisine type, dietary restrictions) that may influence ratings.</li>
+</ul>
+
+<p>From the Interactions (Ratings) Dataset:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">rating</code></strong>: The key target variable we aim to predict. This is an average rating computed from all user interactions with the recipe.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">recipe_id</code></strong>: For linking user feedback to recipes.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">review</code></strong>: Optional user text feedback that can reflect sentiment, though we focus primarily on numerical ratings.</li>
+</ul>
+
+<p>In summary, our analysis revolves around how features like preparation time, number of steps, ingredients, and nutritional information correlate with recipe ratings. By understanding these relationships, we can better predict which recipes will be highly regarded and more likely to please future cooks and diners.</p>
 
 <h1 id="data-cleaning-and-exploratory-data-analysis">Data Cleaning and Exploratory Data Analysis</h1>
 
-<p><em>Placeholder for data cleaning and EDA.</em></p>
+<p>Before diving into analysis, we carefully cleaned and prepared the data to ensure that our findings and predictions would be both reliable and meaningful.</p>
 
-<h2 id="distribution-plot">Distribution Plot</h2>
+<p><strong>Data Cleaning Steps:</strong></p>
+<ol>
+  <li>
+    <p><strong>Merging Datasets:</strong><br />
+We began with two datasets: one containing recipes and their attributes, and another containing user interactions (ratings and reviews). We performed a left merge using the recipe ID to combine attributes (like number of steps, ingredients, and nutrition) with user feedback.</p>
+  </li>
+  <li>
+    <p><strong>Handling Missing and Invalid Ratings:</strong><br />
+We filled all possible missing ratings with NaN. Most notably we replaced all ratings of <code class="language-plaintext highlighter-rouge">0</code> with <code class="language-plaintext highlighter-rouge">NaN</code>. A zero rating doesn’t represent a user’s negative opinion; it often indicates no rating was provided at all. We later used step-mean imputation to fill these (more on this later on).</p>
+  </li>
+  <li>
+    <p><strong>Computing Average Ratings per Recipe:</strong><br />
+After merging, we calculated the average rating for each recipe and added it to the recipes dataset. This gives us a single, clean metric (<code class="language-plaintext highlighter-rouge">rating</code>) to work with for our modeling tasks.</p>
+  </li>
+  <li>
+    <p><strong>Imputing Missing Values:</strong><br />
+To handle missing values in columns like <code class="language-plaintext highlighter-rouge">rating</code> and possibly others, we used a random-imputation approach, drawing new values from observed distributions. This technique preserves the statistical characteristics of the data, ensuring that our analysis isn’t biased by arbitrary substitutions or by dropping rows entirely.</p>
+  </li>
+  <li>
+    <p><strong>Extracting and Cleaning Nutrition Information:</strong><br />
+We split the <code class="language-plaintext highlighter-rouge">nutrition</code> column (which contained multiple nutritional metrics) into separate columns (e.g., <code class="language-plaintext highlighter-rouge">calories</code>, <code class="language-plaintext highlighter-rouge">sugar_pdv</code>, <code class="language-plaintext highlighter-rouge">sodium_pdv</code>) for easier analysis. This step allowed us to treat each nutritional feature independently, providing more granular insights.</p>
+  </li>
+</ol>
 
-<!-- Placeholder for your univariate plot -->
-<iframe src="assets/univariate-plot.html" width="800" height="600" frameborder="0"></iframe>
+<h2 id="head-of-the-cleaned-dataframe">Head of the Cleaned DataFrame</h2>
 
-<p><em>Explanation of the univariate plot.</em></p>
+<p>Below is a preview of the first few rows of our cleaned and merged DataFrame:</p>
 
-<h2 id="bivariate-plot">Bivariate Plot</h2>
-
-<!-- Placeholder for your bivariate plot -->
-<iframe src="assets/bivariate-plot.html" width="800" height="600" frameborder="0"></iframe>
-
-<p><em>Explanation of the bivariate plot.</em></p>
-
-<h2 id="grouped-table">Grouped Table</h2>
-
-<p><em>Placeholder for your grouped or pivot table.</em></p>
-
+<div style="overflow-x: auto;">
 <table>
   <thead>
     <tr>
-      <th>Column 1</th>
-      <th>Column 2</th>
-      <th>Column 3</th>
+      <th>Name</th>
+      <th>ID</th>
+      <th>Minutes</th>
+      <th>Contributor ID</th>
+      <th>Submitted</th>
+      <th>Tags</th>
+      <th>Nutrition</th>
+      <th>n_steps</th>
+      <th>Steps</th>
+      <th>Description</th>
+      <th>Protein PDV</th>
+      <th>Saturated Fat PDV</th>
+      <th>Carbohydrates PDV</th>
+      <th>Description Length</th>
+      <th>Tags Count</th>
+      <th>Bin</th>
+      <th>Rounded Rating</th>
+      <th>Time Bin</th>
+      <th>Sodium Amount</th>
+      <th>Rating Bin</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Data</td>
-      <td>Data</td>
-      <td>Data</td>
+      <td>Impossible Macaroni and Cheese Pie</td>
+      <td>275022</td>
+      <td>50</td>
+      <td>531768</td>
+      <td>2008-01-01</td>
+      <td>['60-minutes-or-less', 'time-to-make', 'course']</td>
+      <td>[386.1, 34.0, 7.0, 24.0, 41.0, 62.0, 8.0]</td>
+      <td>11</td>
+      <td>['heat oven to 400 degrees fahrenheit', 'grease pan']</td>
+      <td>One of my mom's favorite Bisquick recipes...</td>
+      <td>41.0</td>
+      <td>62.0</td>
+      <td>8.0</td>
+      <td>11.0</td>
+      <td>328</td>
+      <td>[10, 15)</td>
+      <td>3.0</td>
+      <td>31-60</td>
+      <td>24.0</td>
+      <td>2-3</td>
     </tr>
     <tr>
-      <td>Data</td>
-      <td>Data</td>
-      <td>Data</td>
+      <td>Impossible Rhubarb Pie</td>
+      <td>275024</td>
+      <td>55</td>
+      <td>531768</td>
+      <td>2008-01-01</td>
+      <td>['60-minutes-or-less', 'time-to-make', 'course']</td>
+      <td>[377.1, 18.0, 208.0, 13.0, 13.0, 30.0, 20.0]</td>
+      <td>6</td>
+      <td>['heat oven to 375 degrees', 'grease pan']</td>
+      <td>A childhood favorite of mine. My mom loved...</td>
+      <td>13.0</td>
+      <td>30.0</td>
+      <td>20.0</td>
+      <td>20.0</td>
+      <td>190</td>
+      <td>[5, 10)</td>
+      <td>3.0</td>
+      <td>31-60</td>
+      <td>13.0</td>
+      <td>2-3</td>
+    </tr>
+    <tr>
+      <td>Impossible Seafood Pie</td>
+      <td>275026</td>
+      <td>45</td>
+      <td>531768</td>
+      <td>2008-01-01</td>
+      <td>['60-minutes-or-less', 'time-to-make', 'course']</td>
+      <td>[326.6, 30.0, 12.0, 27.0, 37.0, 51.0, 5.0]</td>
+      <td>7</td>
+      <td>['preheat oven to 400f', 'lightly grease large pan']</td>
+      <td>This is an oldie but a goodie. Mom's stand...</td>
+      <td>37.0</td>
+      <td>51.0</td>
+      <td>5.0</td>
+      <td>25.0</td>
+      <td>203</td>
+      <td>[5, 10)</td>
+      <td>3.0</td>
+      <td>31-60</td>
+      <td>27.0</td>
+      <td>2-3</td>
+    </tr>
+    <tr>
+      <td>Paula Deen's Caramel Apple Cheesecake</td>
+      <td>275030</td>
+      <td>45</td>
+      <td>666723</td>
+      <td>2008-01-01</td>
+      <td>['60-minutes-or-less', 'time-to-make', 'course']</td>
+      <td>[577.7, 53.0, 149.0, 19.0, 14.0, 67.0, 21.0]</td>
+      <td>11</td>
+      <td>['preheat oven to 350f', 'reserve 3 / 4 cup apple mixture']</td>
+      <td>Thank you Paula Deen! Hubby just happened...</td>
+      <td>14.0</td>
+      <td>67.0</td>
+      <td>21.0</td>
+      <td>45.0</td>
+      <td>167</td>
+      <td>[10, 15)</td>
+      <td>5.0</td>
+      <td>31-60</td>
+      <td>19.0</td>
+      <td>4-5</td>
+    </tr>
+    <tr>
+      <td>Midori Poached Pears</td>
+      <td>275032</td>
+      <td>25</td>
+      <td>307114</td>
+      <td>2008-01-01</td>
+      <td>['lactose', '30-minutes-or-less', 'time-to-make']</td>
+      <td>[386.9, 0.0, 347.0, 0.0, 1.0, 0.0, 33.0]</td>
+      <td>8</td>
+      <td>['bring midori , sugar , spices , rinds and water to boil']</td>
+      <td>The green colour looks fabulous and the t...</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>33.0</td>
+      <td>25.0</td>
+      <td>159</td>
+      <td>[5, 10)</td>
+      <td>5.0</td>
+      <td>16-30</td>
+      <td>0.0</td>
+      <td>4-5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p><em>For a complete view of the dataset, please refer to our <a href="https://github.com/yourusername/yourrepository">GitHub Repository</a>.</em></p>
+
+<h2 id="univariate-analysis">Univariate Analysis</h2>
+
+<p>To understand our data, we first look at the distribution of key variables individually.</p>
+
+<h3 id="distribution-of-average-recipe-ratings">Distribution of Average Recipe Ratings</h3>
+<iframe src="assets/ratings-distribution.html" width="800" height="600" frameborder="0"></iframe>
+
+<p><em>Explanation:</em> This histogram shows that the vast majority of recipes have high average ratings, with a notable clustering around whole numbers like 4 and 5. This suggests that users generally tend to rate recipes positively. Understanding this skew is essential since a strong positive bias might make it harder to differentiate truly exceptional recipes from merely good ones.</p>
+
+<h3 id="distribution-of-number-of-ingredients">Distribution of Number of Ingredients</h3>
+<iframe src="assets/ingredients-distribution.html" width="800" height="600" frameborder="0"></iframe>
+
+<p><em>Explanation:</em> Most recipes contain around 5 to 12 ingredients, with a peak near 8. This indicates that recipes are often moderately complex—neither too simple nor excessively intricate. Knowing this helps guide our interpretation of complexity-related features (like <code class="language-plaintext highlighter-rouge">n_steps</code>) later on.</p>
+
+<h3 id="distribution-of-number-of-steps">Distribution of Number of Steps</h3>
+<iframe src="assets/steps-distribution.html" width="800" height="600" frameborder="0"></iframe>
+
+<p><em>Explanation:</em> Restricting our view to recipes with 1 to 40 steps, we find that most recipes have between 4 and 12 steps. This suggests that a “sweet spot” for recipe instructions may exist, potentially influencing user satisfaction.</p>
+
+<hr />
+
+<h2 id="bivariate-analysis">Bivariate Analysis</h2>
+
+<p>To investigate relationships between variables, we compare them directly.</p>
+
+<h3 id="relationship-between-number-of-steps-and-ratings">Relationship Between Number of Steps and Ratings</h3>
+<iframe src="assets/rating-vs-steps-bins.html" width="800" height="600" frameborder="0"></iframe>
+
+<p><em>Explanation:</em> This grouped histogram displays ratings across different <code class="language-plaintext highlighter-rouge">n_steps</code> bins. The distributions are similar, indicating that simply knowing the number of steps is not a strong predictor of rating on its own. In other words, complexity alone doesn’t guarantee a better or worse rating.</p>
+
+<h3 id="relationship-between-number-of-ingredients-and-ratings">Relationship Between Number of Ingredients and Ratings</h3>
+<iframe src="assets/ingredients-vs-ratings.html" width="800" height="600" frameborder="0"></iframe>
+
+<p><em>Explanation:</em> This set of box-plots displays ratings across different <code class="language-plaintext highlighter-rouge">n_ingredients</code>. The distributions are similar, indicating that simply knowing the number of ingredients is not a strong predictor of rating on its own. In other words, complexity alone doesn’t guarantee a better or worse rating. Maybe the combination of number of steps and ingredients will reveal something later…</p>
+
+<hr />
+
+<h2 id="grouped-table-and-aggregates">Grouped Table and Aggregates</h2>
+
+<p>We also created a grouped table to see how average nutritional values vary by rating ranges:</p>
+
+<p>Average Sodium PDV, Sugar PDV, and Calories by Rating Bins</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>rating_bins</th>
+      <th>sodium_pdv</th>
+      <th>sugar_pdv</th>
+      <th>calories</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1-2</td>
+      <td>32.465152</td>
+      <td>77.036364</td>
+      <td>467.941818</td>
+    </tr>
+    <tr>
+      <td>2-3</td>
+      <td>37.374908</td>
+      <td>81.851064</td>
+      <td>437.671460</td>
+    </tr>
+    <tr>
+      <td>3-4</td>
+      <td>28.573349</td>
+      <td>63.574061</td>
+      <td>430.385835</td>
+    </tr>
+    <tr>
+      <td>4-5</td>
+      <td>28.638137</td>
+      <td>69.117757</td>
+      <td>429.133339</td>
     </tr>
   </tbody>
 </table>
 
-<p><em>Explanation of the table.</em></p>
+<p><em>Significance:</em><br />
+This table provides insight into whether healthier recipes (e.g., lower sodium, fewer calories) correlate with higher ratings. Not suprisingly, because it is a diverse set of recipes, recipes rated between 3 and 5 show some variation in sugar and sodium. Howerver overall recipes with less sugar, sodium, and calories may tend to score better. These subtle differences might inform further feature engineering or modeling efforts.</p>
+
+<hr />
+
+<h2 id="imputation-of-missing-values">Imputation of Missing Values</h2>
+
+<p>We employed a step-mean imputation technique for missing values (such as rating when originally 0). This approach involves imputing missing values by calculating the mean of nearby values within defined bins, maintaining the overall distribution’s statistical properties. By using this method, we ensure the imputed values align closely with the original data patterns, avoiding bias toward extreme values. This technique preserves the integrity of our dataset, allowing for more accurate downstream analyses and model predictions. You can see that the data distribution looks very similar before and after the impuation. Here is the distribution before and after imputation:</p>
+
+<p>Before:</p>
+
+<iframe src="assets/before-ratings-distribution.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>After:</p>
+
+<iframe src="assets/ratings-distribution.html" width="800" height="600" frameborder="0"></iframe>
+
+<p>In summary, the data cleaning and EDA steps laid a solid foundation for our predictive modeling. By carefully handling missing ratings, merging datasets, and exploring both univariate and bivariate relationships, we are now well-prepared to frame a prediction problem and move toward building predictive models in the next steps.</p>
 
 <h1 id="framing-a-prediction-problem">Framing a Prediction Problem</h1>
 
-<p><em>Placeholder for framing the prediction problem.</em></p>
+<p><strong>Type of Problem:</strong><br />
+Our goal is to predict a numerical value: the average recipe rating. Since the rating is a continuous variable, this is a <strong>regression</strong> problem rather than a classification one.</p>
+
+<p><strong>Response Variable:</strong><br />
+The response variable we aim to predict is the <strong>average rating</strong> of each recipe. We chose this because the rating provides a direct measure of how well-received a recipe is by users. By predicting the rating, we can gain insights into which recipe attributes contribute most to its success.</p>
+
+<p><strong>Evaluation Metric:</strong><br />
+We will use <strong>Mean Squared Error (MSE)</strong> as our primary evaluation metric. MSE is well-suited for regression tasks because it:</p>
+<ol>
+  <li>Directly measures the average squared difference between predicted and actual ratings.</li>
+  <li>Penalizes large errors more heavily, encouraging the model to be accurate even on recipes that would otherwise be outliers.<br />
+While metrics like MAE or R² could also be considered, MSE’s sensitivity to large errors makes it particularly informative here, and it’s a standard, widely accepted choice for regression problems.</li>
+</ol>
+
+<p><strong>Justification of Features Used at Prediction Time:</strong><br />
+It’s essential that we only use features available at the “time of prediction.” In other words, we must rely solely on attributes of the recipe itself (e.g., ingredients, number of steps, preparation time, nutritional content, tags) that are known as soon as the recipe is created and published. We do not include user ratings or reviews from the future, since our goal is to predict how the recipe would be rated before any user feedback is received. This ensures our model’s predictions are realistic and reflect the information a recipe creator or platform would have before the recipe starts accumulating interactions.</p>
 
 <h1 id="baseline-model">Baseline Model</h1>
 
-<p><em>Placeholder for the baseline model.</em></p>
+<p>For our baseline model, we chose a straightforward <strong>Linear Regression</strong> approach. We included just two features derived directly from the recipes dataset to predict the average rating:</p>
+
+<ol>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">n_steps</code></strong> (Quantitative): The number of steps in the recipe instructions. This is a numeric value that can theoretically range from very few (simple recipes) to many (complex recipes).</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">n_ingredients</code></strong> (Quantitative): The count of ingredients used in the recipe. Another strictly numeric value, where a higher count typically implies more complexity or richness of flavor.</p>
+  </li>
+</ol>
+
+<p><strong>Data Types of the Features:</strong></p>
+<ul>
+  <li><strong>Quantitative Features:</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">n_steps</code> (no need for encoding, it’s numeric)</li>
+      <li><code class="language-plaintext highlighter-rouge">n_ingredients</code> (no need for encoding, it’s numeric)</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Ordinal Features:</strong><br />
+None of the initial baseline features were inherently ordinal. Both <code class="language-plaintext highlighter-rouge">n_steps</code> and <code class="language-plaintext highlighter-rouge">n_ingredients</code> are purely numeric and continuous, without a defined “rank” other than their numeric magnitude.</p>
+
+<p><strong>Nominal Features:</strong><br />
+None were used in the baseline model. We didn’t include categorical variables (like tags or submission date categories) at this stage, so no one-hot encoding or similar transformations were necessary.</p>
+
+<p><strong>No Additional Encodings or Transformations:</strong><br />
+Since both features are numeric and directly suitable for linear regression, we did not need to perform any special encoding or scaling for this baseline model.</p>
+
+<hr />
+
+<p><strong>Model Performance:</strong><br />
+We evaluated the baseline model’s predictions against the observed ratings using the Mean Squared Error (MSE). The MSE for our baseline model was approximately <strong>0.316</strong>.</p>
+
+<p>To understand this number in context, consider that ratings typically range from 1 to 5. An MSE of 0.316 means our predictions are, on average, off by about <code class="language-plaintext highlighter-rouge">sqrt(0.316) ≈ 0.56</code> points. In other words, if the true rating is a 4.0, the model might often predict somewhere around 3.4 to 4.6.</p>
+
+<p><strong>Is the Model “Good”?</strong><br />
+While this baseline performance is not terrible, it’s certainly not highly accurate. Predicting ratings within roughly half a rating point may be somewhat useful, but there’s likely room for significant improvement by incorporating more features and transformations. Given that we’ve only used two very simple features, it’s expected that this initial model doesn’t capture the complexity of what makes a recipe highly rated.</p>
+
+<p>In summary, our baseline model provides a starting point. It’s “okay” for a first attempt, but not yet “good” by most standards. We anticipate that adding more nuanced features—such as nutritional information, complexity of instructions, or even temporal trends—will help improve our predictive accuracy.</p>
 
 <h1 id="final-model">Final Model</h1>
 
-<p><em>Placeholder for the final model.</em></p>
+<p><strong>Features Added and Their Rationale:</strong></p>
+
+<p>In our baseline model, we relied primarily on the number of steps and the number of ingredients. While these features capture some sense of a recipe’s complexity, we believed that other factors—those that arise naturally from how recipes are developed, presented, and consumed—could provide a richer understanding of what drives user ratings. To better reflect the data generating process, we introduced the following features:</p>
+
+<ol>
+  <li>
+    <p><strong>Nutritional Information (e.g., <code class="language-plaintext highlighter-rouge">calories</code>, <code class="language-plaintext highlighter-rouge">sodium_pdv</code>, <code class="language-plaintext highlighter-rouge">sugar_pdv</code>)</strong>:<br />
+Users often care about healthyness but also extra sugar, salt, and calories can make a recipe taste better. A recipe’s nutritional profile can influence how people feel about it, especially if it aligns (or clashes) with their dietary preferences. For example, a dish that is lower in sodium or balanced in macronutrients may be more appealing to health-conscious consumers. By incorporating these features, we acknowledge that ratings are not given in a vacuum; they are affected by how the recipe’s nutritional makeup meets users’ culinary and health expectations.</p>
+  </li>
+  <li>
+    <p><strong>Description Length (<code class="language-plaintext highlighter-rouge">descriptionLen</code>)</strong>:<br />
+The length and detail of the recipe description may guide user expectations and their understanding of the dish. A more detailed description might help users visualize the final outcome or understand the complexity of flavors, potentially leading to higher satisfaction. This feature represents the human-driven aspect of recipe sharing—cooks who take time to describe their recipes may provide a more enjoyable user experience, thereby influencing ratings.</p>
+  </li>
+  <li>
+    <p><strong>Time-Based Groupings (<code class="language-plaintext highlighter-rouge">date_group</code>)</strong>:<br />
+Over time, user tastes and Food.com’s standards may shift. Grouping recipes by submission date captures trends or seasonal preferences. Recipes posted earlier may differ systematically from newer ones in style, ingredient availability, or formatting conventions. By acknowledging temporal patterns, we align our model with the reality that the data was generated across different time periods, each potentially shaping user ratings.</p>
+  </li>
+  <li>
+    <p><strong>Non-Linear Transformations (Polynomial Features of <code class="language-plaintext highlighter-rouge">n_steps</code>)</strong>:<br />
+The relationship between the complexity of a recipe (as measured by the number of steps) and rating is unlikely to be strictly linear. Perhaps very simple recipes and very elaborate ones appeal to different audiences. Introducing polynomial features allows the model to capture more nuanced, curved relationships that linear models might miss. This reflects the idea that the data generation involves non-linear human preferences—users don’t always rate a recipe with 10 steps halfway between how they rate a 5-step and a 20-step recipe.</p>
+  </li>
+</ol>
+
+<p>In all these cases, the added features and transformations weren’t chosen because we <em>knew</em> they would improve accuracy, but because they represent meaningful aspects of how recipe data and user ratings are generated. Our goal is to incorporate the complexity of human taste, nutrition awareness, and culinary trends, not just to optimize a metric blindly.</p>
+
+<hr />
+
+<p><strong>Modeling Algorithm and Hyperparameter Selection:</strong></p>
+
+<p>For our final model, we used a <strong>Ridge Regression</strong> model. Ridge is a form of linear model that includes a regularization penalty on large coefficients, helping prevent overfitting and improving the model’s ability to generalize to new data.</p>
+
+<ul>
+  <li>
+    <p><strong>Hyperparameters Tuned:</strong><br />
+We focused on the <code class="language-plaintext highlighter-rouge">alpha</code> parameter for Ridge Regression, which controls the strength of regularization. Larger <code class="language-plaintext highlighter-rouge">alpha</code> values place more emphasis on shrinking coefficients toward zero, potentially smoothing out complex patterns but reducing variance.</p>
+  </li>
+  <li>
+    <p><strong>Hyperparameter Selection Method:</strong><br />
+We employed <strong>GridSearchCV</strong> to systematically try a range of <code class="language-plaintext highlighter-rouge">alpha</code> values. GridSearchCV performed cross-validation for each candidate <code class="language-plaintext highlighter-rouge">alpha</code>, allowing us to identify the value that minimized the mean squared error on the validation folds. This data-driven approach ensures that we don’t pick parameters arbitrarily; instead, we rely on robust statistical evidence from our training set.</p>
+  </li>
+  <li>
+    <p><strong>Best Hyperparameters and Model Architecture:</strong><br />
+The best-performing <code class="language-plaintext highlighter-rouge">alpha</code> was selected from a range of powers of two. Although the exact best <code class="language-plaintext highlighter-rouge">alpha</code> was determined empirically, the key takeaway is that including some level of regularization improved the model’s stability and performance.</p>
+  </li>
+</ul>
+
+<hr />
+
+<p><strong>Performance Improvements Over the Baseline:</strong></p>
+
+<p>Our baseline model (using just <code class="language-plaintext highlighter-rouge">n_steps</code> and <code class="language-plaintext highlighter-rouge">n_ingredients</code>) had an MSE of roughly 0.316. After adding meaningful features and fine-tuning hyperparameters with Ridge Regression, we achieved a comparable or slightly improved MSE, on the order of 0.315 on the test set. While this might seem like a negligible change numerically, there are a few important considerations:</p>
+
+<ol>
+  <li>
+    <p><strong>Stability and Robustness:</strong><br />
+Even if the raw MSE improvement is small, the final model is more grounded in the data generating process. We incorporated features that represent user behaviors, nutritional preferences, and temporal factors, making the model’s reasoning more realistic and less one-dimensional.</p>
+  </li>
+  <li>
+    <p><strong>Avoiding Overfitting:</strong><br />
+Regularization helps ensure that the model’s performance is not just a fluke on the training set. Even if improvements are modest, they come with greater confidence that the model can handle new, unseen recipes more gracefully.</p>
+  </li>
+  <li>
+    <p><strong>Room for Future Refinement:</strong><br />
+Identifying that more complex features and transformations produce only marginal improvements suggests that rating predictions may be inherently challenging. It sets the stage for exploring other modeling techniques or even incorporating more detailed textual analysis of reviews in the future.</p>
+  </li>
+</ol>
+
+<p>In summary, while our final model’s performance improvement may be modest in terms of MSE, the approach is now more attuned to the real-world processes behind recipe creation and user feedback. The final model, therefore, represents a more thoughtful, data-aware attempt at predicting what makes a recipe truly shine.</p>
+
 
       </div>
     </main><footer class="site-footer h-card">
@@ -105,7 +491,7 @@
 
   <div class="wrapper">
 
-    <h2 class="footer-heading">Your Creative Title</h2>
+    <h2 class="footer-heading">The Ingredients for a Great Recipe</h2>
 
     <div class="footer-col-wrapper">
       <div class="footer-col footer-col-1">
@@ -117,7 +503,8 @@
 </div>
 
       <div class="footer-col footer-col-3">
-        <p>A brief description of your project.</p>
+        <p>This project explores the factors that contribute to highly rated recipes by analyzing a dataset of recipe features and user ratings. Using data-driven techniques, we identify the &quot;ingredients&quot; for a great recipe, uncovering patterns and relationships between recipe attributes and their success. From data cleaning and visualization to building predictive models, this website provides insights into how data science can help us understand what makes recipes stand out. Perfect for food enthusiasts and data lovers alike, this analysis serves up a unique blend of culinary and computational perspectives.
+</p>
       </div>
     </div>
 

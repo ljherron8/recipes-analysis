@@ -6,32 +6,32 @@ author: "Daniel Leifer and Liam Herron"
 
 # Introduction
 
-Cooking enthusiasts and food lovers often search for the perfect recipe—one that not only tastes great but also has the ratings to back it up. This project uses a dataset of recipes and user interactions from [Food.com](https://www.food.com) to investigate how recipe attributes correlate with user satisfaction, as measured by average ratings.
+Like most people who love to cook, we spend a lot of time looking for great recipes and are curious about if we can quantify what makes them great. This project uses a dataset of recipes and user interactions from [Food.com](https://www.food.com) to investigate how different recipe attributes correlate with user satisfaction, as measured by average ratings.
 
 **Central Question:**  
 *How can we predict a recipe’s rating based solely on the information available about the recipe itself?*
 
-This question matters because understanding which factors influence user ratings can guide home cooks, professional chefs, recipe creators, and platforms like Food.com in developing better, more appealing recipes. For instance, if we find that recipes with more detailed instructions or fewer steps tend to be rated higher, this insight could help recipe authors improve clarity and simplicity in their creations. Similarly, learning about the relationship between nutritional factors, preparation time, or the number of ingredients and rating can help users select recipes that align with their preferences and dietary needs.
+This question matters because understanding which factors influence user ratings can guide home cooks, professional chefs, recipe creators, and platforms like Food.com in developing better, more appealing recipes. For example, if we find that recipes with more detailed instructions or fewer steps tend to be rated higher, this insight could help recipe authors improve clarity and simplicity in their creations. 
 
 **Data Overview:**  
 We used two datasets from Food.com in our analysis:
 1. **Recipes Dataset:** Contains details of **83,782** recipes.
-2. **Interactions (Ratings) Dataset:** Contains details of 731927 user-submitted ratings and reviews of these recipes.
+2. **Interactions (Ratings) Dataset:** Contains details of **731927** user-submitted ratings and reviews of these recipes.
 
 **Relevant Columns & Their Descriptions:**
 
 From the Recipes Dataset:
-- **`name`**: The recipe’s title, providing context and identification.
-- **`id`**: A unique identifier for each recipe.
-- **`minutes`**: The preparation time, giving a sense of complexity or quickness.
-- **`n_steps`**: The number of steps in the recipe instructions, indicating complexity and detail.
-- **`ingredients`** and **`n_ingredients`**: The full ingredient list and its count, reflecting complexity, flavor profiles, and resource requirements.
+- **`name`**: The recipe’s title.
+- **`id`**: A unique id for each recipe.
+- **`minutes`**: The preparation time to make a recipe.
+- **`n_steps`**: The number of steps in the recipe instructions.
+- **`ingredients`** and **`n_ingredients`**: The full ingredient list and the count of the number of ingredients in the list.
 - **`nutrition`**: A list with nutritional data (calories, fat, sugar, sodium, protein, etc.).
-- **`description`**: A user-provided description, possibly adding qualitative insight.
+- **`description`**: A user-provided description of the recipe.
 - **`tags`**: Categorical indicators (e.g., cuisine type, dietary restrictions) that may influence ratings.
 
 From the Interactions (Ratings) Dataset:
-- **`rating`**: The key target variable we aim to predict. This is an average rating computed from all user interactions with the recipe.
+- **`rating`**: The key target variable we aim to predict. This is a average scored by the user in their review. We agregate this by recipe in our analysis.
 - **`recipe_id`**: For linking user feedback to recipes.
 - **`review`**: Optional user text feedback that can reflect sentiment, though we focus primarily on numerical ratings.
 
@@ -203,7 +203,6 @@ Below is a preview of the first few rows of our cleaned and merged DataFrame:
 </table>
 </div>
 
-*For a complete view of the dataset, please refer to our [GitHub Repository](https://github.com/yourusername/yourrepository).*
 
 
 
@@ -229,7 +228,7 @@ To understand our data, we first look at the distribution of key variables indiv
   frameborder="0"
 ></iframe>
 
-*Explanation:* Most recipes contain around 5 to 12 ingredients, with a peak near 8. This indicates that recipes are often moderately complex—neither too simple nor excessively intricate. Knowing this helps guide our interpretation of complexity-related features (like `n_steps`) later on.
+*Explanation:* Most recipes contain around 5 to 12 ingredients, with a peak near 8. This indicates that recipes are often somewhat complex but not over the top. Knowing this helps guide our interpretation of complexity-related features later on.
 
 ### Distribution of Number of Steps
 <iframe
@@ -239,7 +238,7 @@ To understand our data, we first look at the distribution of key variables indiv
   frameborder="0"
 ></iframe>
 
-*Explanation:* Restricting our view to recipes with 1 to 40 steps, we find that most recipes have between 4 and 12 steps. This suggests that a “sweet spot” for recipe instructions may exist, potentially influencing user satisfaction.
+*Explanation:* We also found that most recipes have between 4 and 12 steps. Like with ingredients, this indicates that recipes are often somewhat complex but not over the top.
 
 ---
 
@@ -284,7 +283,7 @@ Average Sodium PDV, Sugar PDV, and Calories by Rating Bins
 
 
 *Significance:*  
-This table provides insight into whether healthier recipes (e.g., lower sodium, fewer calories) correlate with higher ratings. Not suprisingly, because it is a diverse set of recipes, recipes rated between 3 and 5 show some variation in sugar and sodium. Howerver overall recipes with less sugar, sodium, and calories may tend to score better. These subtle differences might inform further feature engineering or modeling efforts.
+This table provides insight into whether healthier recipes (e.g., lower sodium, fewer calories) correlate with higher ratings. Not suprisingly, because it is a diverse set of recipes, recipes rated between 3 and 5 show some variation in sugar and sodium. Howerver overall recipes with less sugar, sodium, and calories may tend to score better.
 
 ---
 
@@ -312,7 +311,7 @@ After:
 
 
 
-In summary, the data cleaning and EDA steps laid a solid foundation for our predictive modeling. By carefully handling missing ratings, merging datasets, and exploring both univariate and bivariate relationships, we are now well-prepared to frame a prediction problem and move toward building predictive models in the next steps.
+In summary, the data cleaning and EDA steps laid a solid foundation for our predictive modeling. By carefully handling missing ratings, merging datasets, and exploring both univariate and bivariate relationships, we are now prepared to frame a prediction problem and move toward building predictive models in the next steps.
 
 
 # Framing a Prediction Problem
@@ -324,69 +323,66 @@ Our goal is to predict a numerical value: the average recipe rating. Since the r
 The response variable we aim to predict is the **average rating** of each recipe. We chose this because the rating provides a direct measure of how well-received a recipe is by users. By predicting the rating, we can gain insights into which recipe attributes contribute most to its success.
 
 **Evaluation Metric:**  
-We will use **Mean Squared Error (MSE)** as our primary evaluation metric. MSE is well-suited for regression tasks because it:
-1. Directly measures the average squared difference between predicted and actual ratings.  
-2. Penalizes large errors more heavily, encouraging the model to be accurate even on recipes that would otherwise be outliers.  
-While metrics like MAE or R² could also be considered, MSE’s sensitivity to large errors makes it particularly informative here, and it’s a standard, widely accepted choice for regression problems.
+We will use **Mean Squared Error (MSE)** as our primary evaluation metric. MSE is well-suited for regression tasks because it directly measures the average squared difference between predicted and actual ratings.  It also penalizes large errors more heavily, encouraging the model to be accurate even on recipes that would otherwise be outliers.  
+While we also considered other metrics metrics like MAE or R², we decided on MSE for this particular data set to really try and understand the driving factors behind all of the recipe ratings.
 
-**Justification of Features Used at Prediction Time:**  
-It’s essential that we only use features available at the “time of prediction.” In other words, we must rely solely on attributes of the recipe itself (e.g., ingredients, number of steps, preparation time, nutritional content, tags) that are known as soon as the recipe is created and published. We do not include user ratings or reviews from the future, since our goal is to predict how the recipe would be rated before any user feedback is received. This ensures our model’s predictions are realistic and reflect the information a recipe creator or platform would have before the recipe starts accumulating interactions.
+**A note on the features we chose:**  
+We were careful to only use features available at the “time of prediction.” In other words, we relied solely on attributes of the recipe itself (e.g., ingredients, number of steps, preparation time, nutritional content, tags) that are known as soon as the recipe is created and published and we chose not include user ratings or reviews from the future, since our goal is to predict how the recipe would be rated before any user feedback is received. This ensures our model’s predictions are realistic and reflect the information a recipe creator or platform would have when they post it.
 
 
 # Baseline Model
 
 For our baseline model, we chose a straightforward **Linear Regression** approach. We included just two features derived directly from the recipes dataset to predict the average rating:
 
-1. **`n_steps`** (Quantitative): The number of steps in the recipe instructions. This is a numeric value that can theoretically range from very few (simple recipes) to many (complex recipes).
+1. **`n_steps`** (Quantitative): The number of steps in the recipe instructions. This is a numeric value that can theoretically range from very few to many. That being said we know most of the data falls between 5 and 12 steps.
 
-2. **`n_ingredients`** (Quantitative): The count of ingredients used in the recipe. Another strictly numeric value, where a higher count typically implies more complexity or richness of flavor.
+2. **`n_ingredients`** (Quantitative): The count of ingredients used in the recipe. Another strictly numeric value, where a higher count typically implies more complexity to a recipe. We know from earlier analysis that there is a similar distribution to that of the number of steps.
 
 **Data Types of the Features:**
-- **Quantitative Features:**  
-  - `n_steps` (no need for encoding, it’s numeric)
-  - `n_ingredients` (no need for encoding, it’s numeric)
+
+**Quantitative Features:**  
+  We did not encode either of these because they are numeric.
+  - `n_steps`  
+  - `n_ingredients`
 
 **Ordinal Features:**  
-None of the initial baseline features were inherently ordinal. Both `n_steps` and `n_ingredients` are purely numeric and continuous, without a defined “rank” other than their numeric magnitude.
+None of the initial baseline features were inherently ordinal. 
 
 **Nominal Features:**  
-None were used in the baseline model. We didn’t include categorical variables (like tags or submission date categories) at this stage, so no one-hot encoding or similar transformations were necessary.
-
-**No Additional Encodings or Transformations:**  
-Since both features are numeric and directly suitable for linear regression, we did not need to perform any special encoding or scaling for this baseline model.
+None were used in the baseline model. We didn’t include categorical variables (like tags or submission date categories) at this stage, so we didn't use one-hot encoding or similar transformations.
 
 ---
 
 **Model Performance:**  
 We evaluated the baseline model’s predictions against the observed ratings using the Mean Squared Error (MSE). The MSE for our baseline model was approximately **0.316**.
 
-To understand this number in context, consider that ratings typically range from 1 to 5. An MSE of 0.316 means our predictions are, on average, off by about `sqrt(0.316) ≈ 0.56` points. In other words, if the true rating is a 4.0, the model might often predict somewhere around 3.4 to 4.6.
+In context, considering that ratings typically range from 1 to 5, this MSE of 0.316 means our predictions are, on average, off by about `sqrt(0.316) ≈ 0.56` points. Basically, if the true rating is a 4.0, the model would often predict somewhere between 3.4 to 4.6.
 
 **Is the Model “Good”?**  
-While this baseline performance is not terrible, it’s certainly not highly accurate. Predicting ratings within roughly half a rating point may be somewhat useful, but there’s likely room for significant improvement by incorporating more features and transformations. Given that we’ve only used two very simple features, it’s expected that this initial model doesn’t capture the complexity of what makes a recipe highly rated.
+While this baseline performance is not terrible, it’s definently not highly accurate, particularly given how many ratings are clustered between 4 and 5. There’s likely room for improvement by incorporating more features and transformations. Given that we’ve only used two very simple features, with limited correleation to rating, it’s expected that this initial model doesn’t capture the complexity of what makes a recipe highly rated.
 
-In summary, our baseline model provides a starting point. It’s “okay” for a first attempt, but not yet “good” by most standards. We anticipate that adding more nuanced features—such as nutritional information, complexity of instructions, or even temporal trends—will help improve our predictive accuracy.
+To summarize, our baseline model provides a starting point. We hope that adding more features—such as nutritional information, complexity of instructions, and more will help improve our predictive accuracy.
 
 
 # Final Model
 
 **Features Added and Their Rationale:**
 
-In our baseline model, we relied primarily on the number of steps and the number of ingredients. While these features capture some sense of a recipe’s complexity, we believed that other factors—those that arise naturally from how recipes are developed, presented, and consumed—could provide a richer understanding of what drives user ratings. To better reflect the data generating process, we introduced the following features:
+In our baseline model, we relied primarily on the number of steps and the number of ingredients. While these features capture some sense of a recipe’s complexity, the complexity of recipe is not the only indicator of how well recieved it will be. We believed that other factors could also help us better understand what drives user ratings. We added the following features:
 
 1. **Nutritional Information (e.g., `calories`, `sodium_pdv`, `sugar_pdv`)**:  
-   Users often care about healthyness but also extra sugar, salt, and calories can make a recipe taste better. A recipe's nutritional profile can influence how people feel about it, especially if it aligns (or clashes) with their dietary preferences. For example, a dish that is lower in sodium or balanced in macronutrients may be more appealing to health-conscious consumers. By incorporating these features, we acknowledge that ratings are not given in a vacuum; they are affected by how the recipe’s nutritional makeup meets users’ culinary and health expectations.
+   There is two side here. Users care about health when eating, but also extra sugar, salt, and calories can make a recipe taste better. For example, a dish that is lower in sodium may be more appealing to health-conscious consumers, that being said the average person might like recipes with lots of salt more.
 
 2. **Description Length (`descriptionLen`)**:  
-   The length and detail of the recipe description may guide user expectations and their understanding of the dish. A more detailed description might help users visualize the final outcome or understand the complexity of flavors, potentially leading to higher satisfaction. This feature represents the human-driven aspect of recipe sharing—cooks who take time to describe their recipes may provide a more enjoyable user experience, thereby influencing ratings.
+   The length and detail of the recipe description might affect the users expectations and understanding of the food they are making. A more longer and more detailed description might be linked to higher ratings. There also may be a factor at play where the people who spend more time describing their recipes put more time into the recipes themselves.
 
 3. **Time-Based Groupings (`date_group`)**:  
-   Over time, user tastes and Food.com’s standards may shift. Grouping recipes by submission date captures trends or seasonal preferences. Recipes posted earlier may differ systematically from newer ones in style, ingredient availability, or formatting conventions. By acknowledging temporal patterns, we align our model with the reality that the data was generated across different time periods, each potentially shaping user ratings.
+   Over time, user tastes and Food.com’s standards may shift. Grouping recipes by submission date captures trends related to time. The food most popular a while ago, is similar to the food most popular today, but certainly not the same. Users may also have given higher reviews on average at different points in time.  By acknowledging time related patterns, we align our model with the reality that the data was generated across different time periods,  potentially shaping ratings.
 
 4. **Non-Linear Transformations (Polynomial Features of `n_steps`)**:  
-   The relationship between the complexity of a recipe (as measured by the number of steps) and rating is unlikely to be strictly linear. Perhaps very simple recipes and very elaborate ones appeal to different audiences. Introducing polynomial features allows the model to capture more nuanced, curved relationships that linear models might miss. This reflects the idea that the data generation involves non-linear human preferences—users don’t always rate a recipe with 10 steps halfway between how they rate a 5-step and a 20-step recipe.
+   The relationship between the complexity of a recipe (as measured by the number of steps) and rating is unlikely to be strictly linear. For example very simple recipes and very elaborate ones may be targetted at different audiences. Introducing polynomial features allows the model to capture more nuanced, relationships that we might otherwise miss. 
 
-In all these cases, the added features and transformations weren’t chosen because we *knew* they would improve accuracy, but because they represent meaningful aspects of how recipe data and user ratings are generated. Our goal is to incorporate the complexity of human taste, nutrition awareness, and culinary trends, not just to optimize a metric blindly.
+We added features and transformations that we thought might meaningfully influence a recipe rating. We didn't know before wether they would improve accuracy or not. Our goal was to think about and base our model off real humans recipe considerations and not just to optimize metrics blindly.
 
 ---
 
@@ -398,25 +394,29 @@ For our final model, we used a **Ridge Regression** model. Ridge is a form of li
   We focused on the `alpha` parameter for Ridge Regression, which controls the strength of regularization. Larger `alpha` values place more emphasis on shrinking coefficients toward zero, potentially smoothing out complex patterns but reducing variance.
 
 - **Hyperparameter Selection Method:**  
-  We employed **GridSearchCV** to systematically try a range of `alpha` values. GridSearchCV performed cross-validation for each candidate `alpha`, allowing us to identify the value that minimized the mean squared error on the validation folds. This data-driven approach ensures that we don’t pick parameters arbitrarily; instead, we rely on robust statistical evidence from our training set.
+  We used **GridSearchCV** to try a range of `alpha` values. GridSearchCV performed cross-validation for each candidate `alpha`, helping us identify what would minimize the mean squared error.
 
 - **Best Hyperparameters and Model Architecture:**  
-  The best-performing `alpha` was selected from a range of powers of two. Although the exact best `alpha` was determined empirically, the key takeaway is that including some level of regularization improved the model’s stability and performance.
+  The best-performing `alpha` was selected from a range of powers of two. Including regularization improved the model’s stability and performance.
+
+To conclude our analysis, we trained our model on all the data once it was properly tuned to maximize its performance on new data in the future.
 
 ---
 
 **Performance Improvements Over the Baseline:**
 
-Our baseline model (using just `n_steps` and `n_ingredients`) had an MSE of roughly 0.316. After adding meaningful features and fine-tuning hyperparameters with Ridge Regression, we achieved a comparable or slightly improved MSE, on the order of 0.315 on the test set. While this might seem like a negligible change numerically, there are a few important considerations:
+Our baseline model (using just `n_steps` and `n_ingredients`) had an MSE of roughly 0.316. After adding meaningful features and fine-tuning hyperparameters with Ridge Regression, we achieved a small improved MSE,  of 0.314 on the test set. This is a small change, but there are still a few improvements:
 
 1. **Stability and Robustness:**  
-   Even if the raw MSE improvement is small, the final model is more grounded in the data generating process. We incorporated features that represent user behaviors, nutritional preferences, and temporal factors, making the model’s reasoning more realistic and less one-dimensional.
+   Our final model incorporated features that represent user behaviors, nutritional preferences, and temporal factors, making the model’s reasoning more realistic and based in many factors and less dependent on the two previous features along.
 
-2. **Avoiding Overfitting:**  
-   Regularization helps ensure that the model’s performance is not just a fluke on the training set. Even if improvements are modest, they come with greater confidence that the model can handle new, unseen recipes more gracefully.
+2. **Added Regularization:**  
+   By adding regularization we showed that the model’s performance is not just a training set fluke. We now have more confidence that the model is not overfitted and can handle future recipes well.
 
-3. **Room for Future Refinement:**  
-   Identifying that more complex features and transformations produce only marginal improvements suggests that rating predictions may be inherently challenging. It sets the stage for exploring other modeling techniques or even incorporating more detailed textual analysis of reviews in the future.
+3. **Learning Experience:**  
+   By identifying that adding these features and transformations alone, only produce only small improvements we learned that rating predictions is complex and challenging. In the futre this serves as a springboard for ideas to better refine our model and hone in on what may drive the data.
 
-In summary, while our final model’s performance improvement may be modest in terms of MSE, the approach is now more attuned to the real-world processes behind recipe creation and user feedback. The final model, therefore, represents a more thoughtful, data-aware attempt at predicting what makes a recipe truly shine.
+
+
+In summary, while our final model’s performance improvement may be modest in terms of MSE, the approach is now more attuned to the real-world processes behind recipe creation and user feedback. Even though there is plenty of room for potential improvement, the final model, has more of the right ingredients to predict what makes a recipe truly shine.
 
